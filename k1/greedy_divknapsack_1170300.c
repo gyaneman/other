@@ -11,7 +11,7 @@ typedef struct Element{
 } Element;
 
 int getRandom(int min, int max){
-	srand((unsigned int)time(NULL));		//なぜかこれするとバグるんだが...
+	//srand((unsigned int)time(NULL));
 	return min + (int)(rand()*(max-min+1.0)/(1.0+RAND_MAX));
 }
 
@@ -67,18 +67,18 @@ int main(){
 		eldata[i].weight = getRandom(1, n);
 		eldata[i].value = getRandom(1, n) * 10;
 		eldata[i].vperw = (double)eldata[i].value / (double)eldata[i].weight;
-		//printf("%d    重さ...%d    価値...%d\n", 
-		//		i+1, eldata[i].value, eldata[i].weight);
+		printf("%d    重さ...%d    価値...%d\n", 
+				i+1, eldata[i].value, eldata[i].weight);
 	}
 	
 	/* sort */
 	quickSort(eldata, 0, n-1);
 	
 	/* debug */
-	printAll(eldata, n);
+	//printAll(eldata, n);
 	
 	/* solve greedy divknapsack */
-	start = clock();
+	//start = clock();
 	ans = 0;
 	cd1 = (double)c;
 	for(i = 0, element = eldata[0]; i < n; i++, element = eldata[i]){
@@ -90,11 +90,11 @@ int main(){
 		}
 		ans += element.value;
 	}
-	end = clock();
+	//end = clock();
 	
 	printf("答え...%lf\n", ans);
-	printf("count...%d\n", count);
-	printf("excution time...%d[ms]\n", end-start);
+	//printf("count...%d\n", count);
+	//printf("excution time...%d[ms]\n", end-start);
 	
 	return 0;
 }
