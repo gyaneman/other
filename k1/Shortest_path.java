@@ -4,12 +4,14 @@ import java.util.Scanner;
 public class Shortest_path {
 	
 	public static void printAll(int numV, int[][] e){
+		System.out.println("=================================");
 		for(int i = 0; i < numV; i++){
 			for(int j = 0; j < numV; j++){
 				System.out.print(e[i][j] + " ");
 			}
 			System.out.println();
 		}
+		System.out.println("=================================");
 	}
 	
 	public static void generateRandom(int numV, int numE, int[][] e){
@@ -44,10 +46,17 @@ public class Shortest_path {
 	public static void main(String[] args) {
 		// TODO 自動生成されたメソッド・スタブ
 		Scanner scan = new Scanner(System.in);
+		Random rnd = new Random();
+		System.out.println("頂点の数を入力してください");
 		int numV = scan.nextInt();
-		//int numE = numV * 3;
-		int numE = scan.nextInt();
-		int start = scan.nextInt();
+		
+		System.out.println("他の入力を自動ランダムで行う場合は0を, 手入力の場合は1を入力してください");
+		int f = scan.nextInt();
+		
+		/* 辺の数を決定 */
+		int numE;
+		if(f == 0) numE = numV * 3;
+		else numE = scan.nextInt();
 		
 		/* 辺の重み */
 		int[][] e = new int[numV][numV];
@@ -57,21 +66,28 @@ public class Shortest_path {
 		for(int i = 0; i < D.length; i++)
 			D[i] = Integer.MAX_VALUE;
 		
-		/* 始点を0にする */
-		D[start-1] = 0;
 		
 		/* 辺の集合 S */
 		int[] S = new int[numV];
 		
-		//generateRandom(numV, numE, e);
-		input(numV, numE, e);
-		//System.out.println("ok");
+		int start;
+		if(f == 0){
+			start = rnd.nextInt(numV) + 1;
+			generateRandom(numV, numE, e);
+		}else{
+			start = scan.nextInt();
+			input(numV, numE, e);
+		}
+		D[start-1] = 0;
 		printAll(numV, e);
 		
 		/* Sの初期化 */
 		for(int j = 0; j < S.length; j++)
 			S[j] = 0;
 			
+		int count1 = 0;
+		int count2 = 0;
+		
 		for(int i = 0; i < numV; i++){
 			/* Dの最小値かつSに含まない頂点をみつける */
 			int min = Integer.MAX_VALUE;
@@ -81,20 +97,23 @@ public class Shortest_path {
 					min = D[j];
 					minv = j;
 				}
+				count1++;
 			}
 			
 			S[minv] = 1;
-			//System.out.println(minv);
 			for(int j = 0; j < numV; j++){
 				if(e[minv][j] != 0 && S[j] == 0){
 					D[j] = Math.min(D[j], D[minv] + e[minv][j]);
 				}
+				count2++;
 			}
 		}
 		
 		for(int i = 0; i < D.length; i++){
-			System.out.println(D[i] + "  " + S[i]);
+			System.out.println(i + "... " + D[i]);
 		}
+		
+		System.out.println("count..." + count1 + "....." + count2);
 	}
 
 }
