@@ -1,0 +1,5 @@
+#!/bin/sh
+opt='-fmacho'
+oname=`nasm -M $opt $@ 2>/dev/null | sed 's/:.*//'`
+#echo "nasm $opt $@ && ld $oname"
+nasm $opt $@ && ld $ldopt $oname

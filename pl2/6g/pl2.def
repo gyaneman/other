@@ -1,0 +1,61 @@
+;; Definitions for Programming Lab II
+
+;; System calls:
+;;
+;; The code number of each system call is listed in /usr/include/sys/syscall.h
+;; The parameters of a system call are stored in the stack.
+
+%macro	sys_exit	1
+	mov	eax, 1		; code number 1 (exit)
+	push	dword %1	; status value
+	lea	ecx, [esp - 4]
+	sysenter
+%endmacro
+
+%macro	sys_write	2
+	mov	eax, 4		; code number 4 (write)
+	push	dword %2	; length to write
+	push	dword %1	; address of the string
+	push	dword 1		; file descriptor (stdout)
+	lea	ecx, [esp - 4]
+	mov	edx, %%end
+	sysenter
+%%end:	add	esp, 16		; remove arguments
+%endmacro
+
+%macro	sys_read	2
+	mov	eax, 3		; code number 3 (read)
+	push	dword %2	; length to read
+	push	dword %1	; address of the char array
+	push	dword 0		; file descriptor (stdin)
+	lea	ecx, [esp - 4]
+	mov	edx, %%end
+	sysenter
+%%end:	add	esp, 16		; remove arguments
+%endmacro
+
+;; Other subroutines
+
+;; print_eax: Print the current value of EAX in hexadecimal notation.
+;; All registers are saved.
+
+	section .text
+print_eax:
+	pusha
+	mov	esi, 7
+.loop:	mov	dl, al
+	and	dl, 0x0f
+	add	dl, '0'
+	cmp	dl, '9'
+	jng	.skip
+	add	dl, 'a'-'9'-1
+.skip:	mov	[.buf + esi], dl
+	shr	eax, 4
+	dec	esi
+	jnl	.loop
+	sys_write	.buf, 9
+	popa
+	ret
+	section .data
+.buf:	times 8 db '0'
+	db 0x0a
