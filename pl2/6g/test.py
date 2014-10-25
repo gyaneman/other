@@ -107,11 +107,6 @@ def average_execution_time():
 	asm_total = 0
 	c_total = 0
 
-	#generate_random_num()
-	
-	#os.system("./nasmld " + asm_file)
-	#os.system("gcc -o kadai2_c " + c_file)
-
 	for i in range(loop):
 		generate_random_num()
 		os.system("./nasmld " + asm_file)
