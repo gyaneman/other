@@ -11,11 +11,13 @@ XOBJCOPY = h8300-elf-objcopy -O srec
 #SEV_SEG_OBJS = hex.o crt0.o lcd.o
 #SENSOR_OBJS = sensor.o crt0.o hex.o lcd.o
 #IIR_OBJS = sensor.o crt0.o hex.o lcd.o h8300_lib_asm.o iir.o iir_main.o
-INTTEST_OBJS = sensor.o crt0.o hex.o lcd.o h8300_lib_asm.o h8300_interrupt_asm.o h8300_interrupt.o int_test_main.o
+INTTEST_OBJS = sensor.o crt0.o hex.o lcd.o h8300_lib_asm.o h8300_interrupt_asm.o h8300_interrupt.o
 
 IRQTEST_OBJS = sensor.o hex.o lcd.o h8300_lib_asm.o h8300_interrupt_asm.o h8300_interrupt.o irq_test.o crt0.o
 
-FRT_OBJS = frt.o crt0.o 
+FRT_OBJS = frt.o crt0.o hex.o lcd.o
+
+SETO_OBJS = setofrt.o setocrt0.o hex.o lcd.o h8300_interrupt.o
 
 #.PHONY: beep_test.mot lcd_test.mot clean
 #.PHONY: lcd_test.mot clean all
@@ -25,8 +27,8 @@ FRT_OBJS = frt.o crt0.o
 
 
 #all: sensor.mot
-#all: inttest.mot
-all: irqtest.mot
+all: inttest.mot
+#all: irqtest.mot
 #all: frt.mot
 
 
@@ -36,6 +38,12 @@ all: irqtest.mot
 .c.o:
 	$(XCC) $< -o $@
 
+
+seto.elf: $(SETO_OBJS)
+	$(XLD) $(SETO_OBJS) -o $@ -Map seto.map --script=lego.lds
+
+seto.mot: seto.elf
+	$(XOBJCOPY) $< $@
 
 
 

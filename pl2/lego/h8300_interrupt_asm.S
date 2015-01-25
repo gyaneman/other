@@ -3,11 +3,19 @@
  * 
  */
 
+
+	.section .data
+	.p2align 1
+	.global clock
+clock:	.byte 0, 0, 0
+
+
 	.section .text
 	.p2align 1
 	.global _set_vector_table
-	.global _entry_ocia
-	.global _entry_irq0
+	;.global _entry_ocia0
+	;.global _entry_irq0
+	.global _OCIA_intr
 
 .if 0
 .equ INT_OCIA	0xfda2
@@ -70,22 +78,25 @@ _set_vector_table:
 	rts
 
 
-_entry_ocia:
-
+;_entry_ocia0:
+_OCIA_intr:
 	push r0
 	push r1
 	push r2
 	push r3
 	push r4
 	push r5
-	push r6
-	push r7
 
 	;mov @(22, r7), r0
 	;push r0
 	;jsr _print_hex
 	;pop r0
-	ldc #0, ccr
+
+	mov #clock, r0;
+	mov @r0, r1
+	mov #1, r2
+	add r2, r1
+	mov r1, @clock
 
 	jsr _OCIA_HANDLE
 	mov #0xFF91, r0
@@ -103,8 +114,6 @@ _entry_ocia:
 	;jsr _print_hex
 	;pop r0
 
-	pop r7
-	pop r6
 	pop r5
 	pop r4
 	pop r3

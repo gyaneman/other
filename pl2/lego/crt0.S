@@ -1,8 +1,8 @@
                 .section .text
                 .p2align 1
                 .global _start
-				.global	_wait_1sec
-				.global _wait_1msec
+				;.global	_wait_1sec
+				;.global _wait_1msec
 _start:		ldc     #0x80,ccr       ; interrupt disable
 ; WDT
 		mov.w	#0xA518,r1
@@ -55,8 +55,19 @@ _start:		ldc     #0x80,ccr       ; interrupt disable
 		ldc     #0x00,ccr       ; interrupt enable
 
 ; user program
-;_loop:
-		jsr _entry		
+		;mov #OCIA_intr, r0
+		;mov r0, @0xFDA2
+		jsr _init_frt_int
+
+	9:
+		mov #clock, r0
+		mov @r0, r1
+		push r1
+		;jsr _print_hex
+		pop r1
+		;jsr _lcd_flush
+		bt 9b
+		;jsr _entry		
 ;		jmp _loop
 
 
@@ -68,7 +79,7 @@ _cold_boot:	mov.w	#0xA57F,r1	; reset by WDT
 _warm_boot:	mov.w	@0,r0		; get reset address from RCX Executable
 		jmp	@r0
 
-
+.if 0
 _wait_1sec:
 		mov.w	#1,r2
 		mov.w	#999,r0
@@ -90,7 +101,7 @@ _wait_1msec:
 		bne 	0b ;(12+12+(12+(6+12)*888+6+12)*999+8)*0.0625
 	
 		rts
-
+.endif
 ; keyword for RCX Executive
                 .section .data
                 .string "Do you byte, when I knock?"

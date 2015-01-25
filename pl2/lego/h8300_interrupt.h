@@ -66,7 +66,8 @@
  * functions
  */
 /* free running timer */
-void init_frt_int(uint16 ocra, uint8 tier, uint8 clock_sorce);
+//void init_frt_int(uint16 ocra, uint8 tier, uint8 clock_sorce);
+void init_frt_int();
 void OCIA_HANDLE();
 
 /* IRQ */

@@ -7,17 +7,21 @@
 
 #define USE_FRT
 
-void entry_ocia();
-void entry_irq0();
-void set_vector_table();
+//void entry_ocia();
+void OCIA_intr();
+//void entry_irq0();
+//void set_vector_table();
 
 
 //0xffff, 0x10, 0x0
 #ifdef USE_FRT
-void init_frt_int(uint16 ocra, uint8 tier, uint8 clock_sorce) {
+void init_frt_int(){
+	uint16 ocra = 0xffff;
+	uint8 tier = OCIAE;
+//void init_frt_int(uint16 ocra, uint8 tier, uint8 clock_sorce) {
 	uint8 tmp;
 
-	set_vector_table(INT_OCIA, entry_ocia);
+	set_vector_table(INT_OCIA, OCIA_intr);
 
 	frt.TCSR |= 0x01;
 
@@ -28,10 +32,20 @@ void init_frt_int(uint16 ocra, uint8 tier, uint8 clock_sorce) {
 
 	frt.OCRAB = ocra;
 
-	frt.TCR |= clock_sorce;
+	//frt.TCR |= clock_sorce;
 
 	frt.TIER = tier;
 
+}
+
+uint16 counter;
+void OCIA_HANDLE(){
+	counter++;
+	gio.P6DR |= 0x01;
+	if(counter >= 500){
+		print_hex(get_sensor_value(1));
+		counter = 0;
+	}
 }
 #endif
 

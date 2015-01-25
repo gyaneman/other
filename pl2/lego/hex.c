@@ -152,7 +152,7 @@ uint8 print_SingleNum(uint8 d, SingleNum c){
 		default:
 			return 1;	// error
 	}
-	lcd_flush();
+	//lcd_flush();
 	return 0;
 }
 
@@ -193,7 +193,7 @@ uint8 print_char(uint8 d, char c){
 		default:
 			return 1;	// error
 	}
-	lcd_flush();
+	//lcd_flush();
 	return 0;
 }
 
@@ -205,14 +205,14 @@ void print_string(char* str){
 }
 
 
-void print_slide(char* str){
+/*void print_slide(char* str){
   char* temp = str;
   uint8 i = 0;
   for(i = 0; str[3] != NULL; str++){
     print_string(str);
     wait_1sec();
   }
-}
+}*/
 
 
 
@@ -304,6 +304,8 @@ void print_hex(uint16 num){
 	tmp = tmp >> 12;
 	c = hex2SingleNum(tmp);
 	print_SingleNum(3, c);
+	
+	lcd_flush();
 }
 
 /*
